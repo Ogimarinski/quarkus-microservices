@@ -1,0 +1,9 @@
+# IntelliJ
+.idea/
+*.iml
+
+# Maven build output
+target/
+
+# Локални тайни: НИКОГА в git
+.env
