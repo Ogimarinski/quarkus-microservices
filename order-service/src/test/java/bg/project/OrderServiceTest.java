@@ -2,29 +2,27 @@ package bg.project;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.internal.matchers.Or;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 public class OrderServiceTest {
 
     private OrderRepository orderRepository;
-    private ProductClient productClient;
+    private ProductGateway productGateway;
     private OrderService orderService;
 
     @BeforeEach
     void setUp(){
         orderRepository = mock(OrderRepository.class);
-        productClient = mock(ProductClient.class);
-        orderService = new OrderService(orderRepository, productClient);
+        productGateway = mock(ProductGateway.class);
+        orderService = new OrderService(orderRepository, productGateway);
     }
 
     @Test
     void createOrder_calculatesTotalPrice(){
 
-        when(productClient.getById(1L)).thenReturn(new Product(1L, "Laptop", 100.0));
+        when(productGateway.getById(1L)).thenReturn(new Product(1L, "Laptop", 100.0));
 
         orderService.createOrder(new CreateOrderRequest(1L, 3));
 
@@ -35,6 +33,6 @@ public class OrderServiceTest {
     void createOrder_throwsWhenQuantityIsZero(){
         assertThrows(InvalidOrderException.class, () -> orderService.createOrder(new CreateOrderRequest(1L, 0)));
 
-        verifyNoInteractions(productClient);
+        verifyNoInteractions(productGateway);
     }
 }
