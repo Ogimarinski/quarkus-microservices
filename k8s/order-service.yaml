@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: order-service
-          image: ogimarinski/order-service:9a9de4b
+          image: ogimarinski/order-service:43d075a
           ports:
             - containerPort: 8081
           envFrom:
