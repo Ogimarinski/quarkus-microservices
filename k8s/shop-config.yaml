@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shop-config
+  namespace: shop
+data:
+  DB_URL: jdbc:oracle:thin:@oracle-db:1521/FREEPDB1
+  PRODUCT_SERVICE_URL: http://product-service:8080
