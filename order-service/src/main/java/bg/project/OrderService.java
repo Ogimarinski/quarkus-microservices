@@ -2,7 +2,6 @@ package bg.project;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.*;
-import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,11 +10,11 @@ import java.util.Optional;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final ProductClient productClient;
+    private final ProductGateway productGateway;
 
-    public OrderService(OrderRepository orderRepository, @RestClient ProductClient productClient) {
+    public OrderService(OrderRepository orderRepository, ProductGateway productGateway) {
         this.orderRepository = orderRepository;
-        this.productClient = productClient;
+        this.productGateway = productGateway;
     }
 
     public List<Order> getAllOrders(){
@@ -36,18 +35,7 @@ public class OrderService {
             throw new InvalidOrderException("Quantity must be greater than 0");
         }
 
-        Product product;
-        try{
-            product = productClient.getById(createOrderRequest.productId());
-        }catch (WebApplicationException e){
-            if(e.getResponse().getStatus() == 404){
-                throw new ProductNotFoundException("Product with ID" + createOrderRequest.productId() + " does not exist");
-            }
-
-            throw e;
-        } catch (ProcessingException e){
-            throw new ProductServiceUnavailableException("Product service is unavailable");
-        }
+        Product product = productGateway.getById(createOrderRequest.productId());
 
         double totalPrice = createOrderRequest.quantity() * product.price();
 
