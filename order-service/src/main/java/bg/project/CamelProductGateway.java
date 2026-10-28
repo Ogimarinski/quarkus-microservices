@@ -19,8 +19,9 @@ public class CamelProductGateway implements ProductGateway{
 
     @Override
     public Product getById(Long id){
+        Product product;
         try{
-            return producerTemplate.requestBodyAndHeader(
+             product = producerTemplate.requestBodyAndHeader(
                     "direct:getProduct", null, "productId", id, Product.class);
 
         } catch (CamelExecutionException e) {
@@ -35,5 +36,11 @@ public class CamelProductGateway implements ProductGateway{
 
             throw e;
         }
+
+        if(product == null || !id.equals(product.id()) ||product.price() == null || product.price() <= 0){
+            throw new InvalidProductResponseException("Product service returned invalid data for product with ID:" + id);
+        }
+
+        return product;
     }
 }

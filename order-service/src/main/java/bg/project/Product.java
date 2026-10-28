@@ -6,6 +6,6 @@ import io.quarkus.runtime.annotations.RegisterForReflection;
 public record Product(
         Long id,
         String name,
-        double price
+        Double price
 ) {
 }

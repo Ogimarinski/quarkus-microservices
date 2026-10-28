@@ -23,14 +23,39 @@ public class ProductService {
     }
 
     public Product createProduct(Product product){
+
+        validate(product);
         return productRepository.create(product);
     }
 
     public Optional<Product> updateProduct(Long id, Product product){
+        validate(product);
         return productRepository.update(id, product);
     }
 
     public boolean deleteProduct(Long id){
         return productRepository.delete(id);
+    }
+
+    private void validate(Product product){
+        if(product == null){
+            throw new InvalidProductException("Request body is required");
+        }
+
+        if(product.name() == null || product.name().isBlank()){
+            throw new InvalidProductException("Name is required");
+        }
+
+        if(product.name().length() > 100){
+            throw new InvalidProductException("Name must be at most 100 chars");
+        }
+
+        if(product.price() == null){
+            throw new InvalidProductException("Price is required");
+        }
+
+        if(product.price() <= 0){
+            throw new InvalidProductException("Price must be greater than 0");
+        }
     }
 }

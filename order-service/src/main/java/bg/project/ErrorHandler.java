@@ -49,4 +49,13 @@ public class ErrorHandler {
                 .build();
     }
 
+    @ServerExceptionMapper
+    public Response handleInvalidProductResponse(InvalidProductResponseException e){
+        logger.error(e.getMessage());
+
+        return Response.status(Response.Status.BAD_GATEWAY)
+                .entity(new ErrorResponse(502, "Product service returned invalid data"))
+                .build();
+    }
+
 }
